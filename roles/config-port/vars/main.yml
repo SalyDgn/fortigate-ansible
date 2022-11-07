@@ -1,0 +1,9 @@
+---
+# vars file for config-port
+allowaccess:
+  - http
+adress_ip: 10.10.50.10 255.255.255.0
+port_name: port2
+role: lan
+mode: static
+alias: LAN2

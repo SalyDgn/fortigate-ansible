@@ -1,0 +1,17 @@
+---
+# tasks file for config-port
+- name: "Configuration port"
+  fortios_system_interface:
+    vdom: root
+    state: present
+    enable_log: yes
+    system_interface:
+      algorithm: L3
+      allowaccess: "{{ allowaccess }}"
+      ip: "{{ adress_ip }}"
+      name: "{{ port_name }}"
+      status: up
+      type: physical
+      role: "{{ role }}"
+      mode: "{{ mode }}"
+      alias: "{{ alias }}"

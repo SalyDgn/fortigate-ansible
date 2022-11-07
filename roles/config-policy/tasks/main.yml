@@ -1,0 +1,19 @@
+---
+# tasks file for config-policy
+- name: "{{ policy_name }}"
+  fortios_firewall_policy:
+    vdom: root
+    state: present
+    firewall_policy:
+      name: "{{ policy_name }}"
+      action: accept
+      dstaddr: "{{ destinations_address }}"
+      dstintf: "{{ destinations_interface }}"
+      logtraffic: utm
+      nat: enable
+      policyid: "{{ policyid }}"
+      service: "{{ services }}"
+      srcaddr: "{{ sources_address }}"
+      srcintf: "{{ sources_interface }}"
+      schedule: "{{ schedule }}"
+      schedule_timeout: "{{ schedule_timeout }}"

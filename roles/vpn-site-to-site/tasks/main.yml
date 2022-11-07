@@ -1,0 +1,111 @@
+---
+# tasks file for vpn-site-to-site
+- name: VPN PHASE1
+  tags: vpn1
+  fortios_vpn_ipsec_phase1_interface:
+    vdom: "{{ vdom }}"
+    state: "present"
+    vpn_ipsec_phase1_interface:
+      name: "P1vpn-to-{{item.value.subnets.site_remote}}"
+      interface: "port1"
+      peertype: "any"
+      proposal: "{{item.value.proposal}}"
+      dpd_retryinterval: "5"
+      dhgrp: "{{item.value.dh}}"
+      psksecret: "{{item.value.pskey}}"
+      remote_gw: "{{item.value.peerIP}}"
+  with_dict: "{{vpn}}"
+  register: result
+
+- name: VPN PHASE2
+  tags: vpn1
+  fortios_vpn_ipsec_phase2_interface:
+    vdom: "{{ vdom }}"
+    state: "present"
+    vpn_ipsec_phase2_interface:
+      name: "P2vpn-to-{{item.value.subnets.site_remote}}-{{item.value.subnets.sas.name}}"
+      phase1name: "P1vpn-to-{{item.value.subnets.site_remote}}"
+      proposal: "{{ item.value.proposal }}"
+      replay: "enable"
+      pfs: "enable"
+      auto_negotiate: "enable"
+      keylifeseconds: "{{item.value.phase2keylifetime }}"
+      src_subnet: "{{item.value.subnets.sas.local}}"
+      dst_subnet: "{{item.value.subnets.sas.remote}}"
+  with_dict: "{{ vpn }}"
+
+- name: firewall address local
+  tags: firewall_addr
+  fortios_firewall_address:
+    vdom: "{{ vdom }}"
+    state: "present"
+    firewall_address:
+      name: "{{item.value.subnets.site_local}}-{{item.value.subnets.sas.name}}"
+      subnet: "{{item.value.subnets.sas.local}}"
+  with_dict: "{{ vpn }}"
+
+- name: firewall address remote
+  tags: firewall_addr
+  fortios_firewall_address:
+    vdom: "{{ vdom }}"
+    state: "present"
+    firewall_address:
+      name: "{{item.value.subnets.site_remote}}-{{item.value.subnets.sas.name}}"
+      subnet: "{{item.value.subnets.sas.remote}}"
+  with_dict: "{{ vpn }}"
+
+- name: firewall policy outbound
+  tags: firewall_out
+  fortios_firewall_policy:
+    vdom: "{{ vdom }}"
+    state: "present"
+    firewall_policy:
+      policyid: 7
+      srcintf:
+        - name: "port2"
+      dstintf:
+        - name: "P1vpn-to-{{item.value.subnets.site_remote}}"
+      dstaddr:
+        - name: "{{item.value.subnets.site_remote}}-{{item.value.subnets.sas.name}}"
+      srcaddr:
+        - name: "{{item.value.subnets.site_local}}-{{item.value.subnets.sas.name}}"
+      schedule: "always"
+      action: "accept"
+      service:
+        - name: "PING"
+        - name: "SSH"
+  with_dict: "{{ vpn }}"
+
+- name: firewall policy inbound
+  tags: firewall_in
+  fortios_firewall_policy:
+    vdom: "{{ vdom }}"
+    state: "present"
+    firewall_policy:
+      policyid: 5
+      srcintf:
+        - name: "P1vpn-to-{{item.value.subnets.site_remote}}"
+      dstintf:
+        - name: "port2"
+      dstaddr:
+        - name: "{{item.value.subnets.site_local}}-{{item.value.subnets.sas.name}}"
+      srcaddr:
+        - name: "{{item.value.subnets.site_remote}}-{{item.value.subnets.sas.name}}"
+      schedule: "always"
+      action: "accept"
+      service:
+        - name: "PING"
+        - name: "SSH"
+  with_dict: "{{ vpn }}"
+
+- name: route through vpn tunnel
+  tags: route
+  ignore_errors: true
+  fortios_router_static:
+    vdom: "{{ vdom }}"
+    state: "present"
+    router_static:
+      dst: "{{item.value.subnets.sas.remote}}"
+      device: "P1vpn-to-{{item.value.subnets.site_remote}}"
+      seq_num: "0"
+  with_dict: "{{ vpn }}"

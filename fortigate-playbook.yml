@@ -1,0 +1,6 @@
+- name: Configure fortigate
+  hosts: fortinet
+  roles:
+    - role: vpn_site_to_site
+  #gather_facts: false
+  connection: httpapi

@@ -1,0 +1,16 @@
+vpn:
+  site:
+    host: 192.168.32.134
+    vdom: root
+    peerIP: 192.168.32.133
+    pskey: sample
+    dh: 5
+    proposal: des-sha512
+    phase2keylifetime: 3600
+    subnets:
+      site_local: Local
+      site_remote: Remote
+      sas:
+        - name: sa1
+          local: 10.10.50.0 255.255.255.0
+          remote: 10.10.40.0 255.255.255.0
