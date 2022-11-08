@@ -31,6 +31,9 @@
     site_local_name="{{vpn.site.subnets.site_local}}"
     site_remote_name="{{vpn.site.subnets.site_remote}}"
     sas="{{vpn.site.subnets.sas}}"
+    outbound_policy_id="{{ vpn.site.outbound_policy_id }}"
+    inbound_policy_id="{{vpn.site.inbound_policy_id}}"
+    seq_num_route_static="{{vpn.site.seq_num_route_static}}"
   tags: route,vpn_status
 
 - name: VPN PHASE2
@@ -76,7 +79,7 @@
     vdom: "{{ vdom }}"
     state: "present"
     firewall_policy:
-      policyid: "0"
+      policyid: "{{ outbound_policy_id }}"
       srcintf:
         - name: "port2"
       dstintf:
@@ -98,7 +101,7 @@
     vdom: "{{ vdom }}"
     state: "present"
     firewall_policy:
-      policyid: "0"
+      policyid: "{{inbound_policy_id}}"
       srcintf:
         - name: "P1vpn-to-{{site_remote_name}}"
       dstintf:
@@ -123,5 +126,5 @@
     router_static:
       dst: "{{item.remote}}"
       device: "P1vpn-to-{{site_remote_name}}"
-      seq_num: "0"
+      seq_num: "{{seq_num_route_static}}"
   with_items: "{{sas}}"

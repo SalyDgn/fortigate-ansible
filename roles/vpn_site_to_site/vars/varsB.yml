@@ -14,3 +14,6 @@ vpn:
         - name: sa1
           local: 10.10.40.0 255.255.255.0
           remote: 10.10.50.0 255.255.255.0
+    outbound_policy_id: 5
+    inbound_policy_id: 7
+    seq_num_route_static: 1
