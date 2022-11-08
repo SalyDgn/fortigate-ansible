@@ -15,3 +15,26 @@
       role: "{{ role }}"
       mode: "{{ mode }}"
       alias: "{{ alias }}"
+
+- name: Configuration du DHCP
+  fortios_system_dhcp_server:
+    vdom: root
+    state: present
+    system_dhcp_server:
+      auto_configuration: enable
+      auto_managed_status: enable
+      conflicted_ip_timeout: 1800
+      default_gateway: "{{ default_gateway }}"
+      netmask: "{{netmask}}"
+      dns_server1: 8.8.8.8
+      dns_server2: 8.8.4.4
+      dns_server3: "{{ end_ip }}"
+      dns_service: default
+      id: "{{id}}"
+      interface: "{{ port_name }}"
+      ip_mode: range
+      ip_range:
+        - end_ip: "{{ end_ip }}"
+          id: "{{ip_range_id}}"
+          start_ip: "{{ start_ip }}"
+      lease_time: 6048000

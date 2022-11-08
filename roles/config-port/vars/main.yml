@@ -7,3 +7,9 @@ port_name: port2
 role: lan
 mode: static
 alias: LAN0
+default_gateway: 10.10.50.1
+netmask: 255.255.255.0
+end_ip: 10.10.50.254
+id: 5
+ip_range_id: 1
+start_ip: 10.10.50.2
