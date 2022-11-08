@@ -79,6 +79,7 @@
     vdom: "{{ vdom }}"
     state: "present"
     firewall_policy:
+      name: outbound policy
       policyid: "{{ outbound_policy_id }}"
       srcintf:
         - name: "port2"
@@ -101,6 +102,7 @@
     vdom: "{{ vdom }}"
     state: "present"
     firewall_policy:
+      name: inbound policy
       policyid: "{{inbound_policy_id}}"
       srcintf:
         - name: "P1vpn-to-{{site_remote_name}}"

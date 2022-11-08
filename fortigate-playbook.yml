@@ -1,6 +1,6 @@
 - name: Configure fortigate
-  hosts: fortinet
+  hosts: "fortigate-A"
   roles:
-    - role: vpn_site_to_site
+    - role: config-port
   #gather_facts: false
   connection: httpapi
