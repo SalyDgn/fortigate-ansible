@@ -4,7 +4,7 @@
   fortios_system_interface:
     vdom: root
     state: present
-    enable_log: yes
+    enable_log: true
     system_interface:
       algorithm: L3
       allowaccess: "{{ allowaccess }}"
