@@ -1,2 +1,2 @@
 collections:
-  - name: fortios.fortios_system_global
+  - name: fortinet.fortios
