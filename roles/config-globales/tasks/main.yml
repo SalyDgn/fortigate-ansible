@@ -1,7 +1,7 @@
 ---
 # tasks file for config-globales
 - name: "Configuration globale des fortigates"
-  fortios_system_global:
+  fortinet.fortios.fortios_system_global:
     vdom: root
     system_global:
       admin_concurrent: enable
