@@ -1,0 +1,3 @@
+collections:
+  - name: fortios_system_global
+  - name: fortios_firewall_policy
