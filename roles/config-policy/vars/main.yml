@@ -1,18 +1,18 @@
 ---
 # vars file for config-policy
 policy_name: Accès Internet
+policyid: 3
+sources_address:
+  - name: all
+sources_interface:
+  - name: port2
 destinations_address:
   - name: all
 destinations_interface:
-  - name: port2
-policyid: 1
+  - name: port1
 services:
   - name: HTTPS
   - name: HTTP
   - name: DNS
-sources_address:
-  - name: all
-sources_interface:
-  - name: port1
 schedule: always
 schedule_timeout: disable
