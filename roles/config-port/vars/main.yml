@@ -1,18 +1,23 @@
 ---
 # vars file for config-port
+# interface
 allowaccess:
   - http
-adress_ip: 10.10.40.1 255.255.255.0
+  - https
+  - ping
+  - ssh
+adress_ip: 10.10.30.1 255.255.255.0
 port_name: port2
 role: lan
 mode: static
-alias: LAN0
+alias: LAN1
+
 # Config dhcp
 # if configure_dhcp is false all the following lines are ignored
 configure_dhcp: false
-id: 2
-default_gateway: 10.10.40.1
+id: 3
+default_gateway: 10.10.30.1
 netmask: 255.255.255.0
-end_ip: 10.10.40.254
 ip_range_id: 1
-start_ip: 10.10.40.2
+start_ip: 10.10.30.2
+end_ip: 10.10.30.254
