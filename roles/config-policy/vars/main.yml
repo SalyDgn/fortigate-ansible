@@ -3,11 +3,11 @@
 policy_name: Accès Internet
 policyid: 3
 sources_address:
-  - name: all
+  - name: all # You can use the address name of an existing address or a created one
 sources_interface:
   - name: port2
 destinations_address:
-  - name: all
+  - name: all # You can use the address name of an existing address or a created one
 destinations_interface:
   - name: port1
 services:
@@ -24,3 +24,12 @@ schedule_name: test
 start_date: 10:25 2022/11/14
 end_date: 10:40 2022/11/14
 expiration_days: 0
+
+# Create addresses
+# if create_new_address is false all the following lines are ignored
+create_new_address: false
+addresses:
+  - address_name: test_address
+    address_subnet: 10.10.20.2/32
+    address_interface: any
+  # You can add/create others addresses in the list

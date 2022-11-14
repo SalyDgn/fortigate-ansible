@@ -16,6 +16,18 @@
 - set_fact: schedule="{{schedule_name}}"
   when: create_new_schedule is true
 
+# Create an address
+- name: Configure IPv4 addresses.
+  fortios_firewall_address:
+    vdom: "root"
+    state: "present"
+    firewall_address:
+      name: "{{ item.address_name }}"
+      subnet: "{{ item.address_subnet}}"
+      interface: "{{ item.address_interface }}"
+  with_items: "{{ addresses }}"
+  when: create_new_address is true
+
 - name: "{{ policy_name }}"
   fortios_firewall_policy:
     vdom: root
