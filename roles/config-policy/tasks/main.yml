@@ -1,5 +1,21 @@
 ---
 # tasks file for config-policy
+
+# Create a schedule
+- name: Onetime schedule configuration.
+  fortios_firewall_schedule_onetime:
+    vdom: "root"
+    state: "present"
+    firewall_schedule_onetime:
+      name: "{{schedule_name}}"
+      start: "{{start_date}}"
+      end: "{{end_date}}"
+      expiration_days: "{{ expiration_days }}"
+  when: create_new_schedule is true
+
+- set_fact: schedule="{{schedule_name}}"
+  when: create_new_schedule is true
+
 - name: "{{ policy_name }}"
   fortios_firewall_policy:
     vdom: root

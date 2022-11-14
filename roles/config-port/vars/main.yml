@@ -8,6 +8,8 @@ role: lan
 mode: static
 alias: LAN0
 # Config dhcp
+# if configure_dhcp is false all the following lines are ignored
+configure_dhcp: false
 id: 2
 default_gateway: 10.10.40.1
 netmask: 255.255.255.0

@@ -16,3 +16,11 @@ services:
   - name: DNS
 schedule: always
 schedule_timeout: disable
+
+# Create a schedule
+# if create_new_schedule is false all the following lines are ignored
+create_new_schedule: false
+schedule_name: test
+start_date: 10:25 2022/11/14
+end_date: 10:40 2022/11/14
+expiration_days: 0
