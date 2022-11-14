@@ -1,11 +1,14 @@
 ---
 # tasks file for vpn_site_to_site
-- name: Include vars
-  include_vars: varsA.yml
-  when: inventory_hostname == "fortigate-A"
-- name: Include vars
-  include_vars: varsB.yml
-  when: inventory_hostname == "fortigate-B"
+- set_fact: vpn="{{vpn_fortigate1}}"
+  when:
+    - inventory_hostname == fortigate1
+    - vpn_fortigate1 is defined
+
+- set_fact: vpn="{{vpn_fortigate2}}"
+  when:
+    - inventory_hostname == fortigate2
+    - vpn_fortigate2 is defined
 
 - name: VPN PHASE1
   tags: vpn1
