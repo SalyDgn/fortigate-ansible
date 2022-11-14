@@ -1,19 +1,19 @@
 ---
 # tasks file for config-globales
 - name: "Configuration globale des fortigates"
-  fortinet.fortios.fortios_system_global:
+  fortios_system_global:
     vdom: root
     system_global:
       admin_concurrent: enable
       admin_console_timeout: 300
-      admin_https_redirect: enable
+      admin_https_redirect: disable
       admin_login_max: 100
       admin_maintainer: enable
       admin_port: 80
       admin_restrict_local: disable
       admin_scp: disable
       admin_server_cert: Fortinet_GUI_Server
-      admin_sport: 4433
+      admin_sport: 443
       admin_ssh_grace_time: 120
       admin_ssh_password: enable
       admin_ssh_port: 22
