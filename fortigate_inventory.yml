@@ -26,8 +26,8 @@ fortinet:
 
         fortigate-C:
             ansible_host: 192.168.176.140
-            ansible_user: "ass"
-            ansible_password: "ass"
+            ansible_user: "admin"
+            ansible_password: "admin"
             vdom: "root"
             ansible_connection: httpapi
             ansible_httpapi_port: 443
