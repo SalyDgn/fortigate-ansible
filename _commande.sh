@@ -1,3 +1,4 @@
+
 # global config command
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>> Run config-globales role <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 ansible-playbook \
