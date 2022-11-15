@@ -1,0 +1,65 @@
+- name: installation of awx
+  hosts:
+
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install the apt packages
+      become: true
+      apt:
+        name:
+          - docker.io
+          - ansible
+          - curl
+          - nodejs
+          - npm
+          - python3-pip
+          - git
+          - pwgen
+          - vim
+
+    - name: Install python packages
+      pip:
+        - name: request
+        - name: docker-compose==1.23.1
+        - name: pyYaml
+          extra_args: --upgrade
+
+    - name: Install npm
+      community.general.npm:
+        name: npm
+        global: true
+
+    - name: Start and enable service docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Download docker-compose
+      shell: curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+    - name: Make docker-compose file executable
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: 111
+
+    - name: Update apt packages
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: Build docker-compose with a Makefile
+      make:
+        chdir: ./awx/
+        target: docker-compose-build
+
+    - name: Run docker-compose with a Makefile
+      make:
+        chdir: ./awx/
+        target: docker-compose
+      shell: docker exec tools_awx_1 make clean-ui ui-devel
