@@ -1,0 +1,19 @@
+---
+# vars file for config-vlan
+nom: VLAN-0
+allowaccess:
+  - http
+adress_ip: 10.10.60.1 255.255.255.0
+port_name: port2
+role: lan
+mode: static
+alias: VLAN-0
+# Config dhcp
+# if configure_dhcp is false all the following lines are ignored
+configure_dhcp: false
+id: 2
+default_gateway: 10.10.40.1
+netmask: 255.255.255.0
+end_ip: 10.10.40.254
+ip_range_id: 1
+start_ip: 10.10.40.2
