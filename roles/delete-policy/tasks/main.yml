@@ -1,7 +1,7 @@
 ---
 # tasks file for delete-policy
 
-- name: "{{ policy_name }}"
+- name: "delete policy"
   fortios_firewall_policy:
     vdom: root
     state: absent
