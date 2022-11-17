@@ -1,0 +1,24 @@
+---
+# tasks file for delete-policy
+
+- name: filter the policy id
+  fortinet.fortios.fortios_configuration_fact:
+    vdom: "root"
+    filters:
+      - name=="{{policyname}}"
+    selector: "firewall_policy"
+  register: policy
+
+- name: Fail
+  ansible.builtin.fail:
+    msg: Policy not found. Please verify the name.
+  when: policy.meta.results[0] is undefined
+
+- set_fact: policyid="{{policy.meta.results[0].policyid}}"
+
+- name: "delete policy"
+  fortios_firewall_policy:
+    vdom: root
+    state: absent
+    firewall_policy:
+      policyid: "{{policyid}}"
