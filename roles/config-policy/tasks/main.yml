@@ -28,6 +28,20 @@
   with_items: "{{ addresses }}"
   when: create_new_address is true
 
+  #Search Id
+- name: fetch all policies
+  fortinet.fortios.fortios_configuration_fact:
+    sorters: policyid
+    formatters: policyid
+    selector: firewall_policy
+  register: policies
+
+- set_fact: policyid="{{policies.meta.results[-1].policyid | int + 1}}"
+  when: policies.meta.results[-1].policyid is defined
+
+- set_fact: policyid=1
+  when: policies.meta.results[-1].policyid is undefined
+
 - name: "{{ policy_name }}"
   fortios_firewall_policy:
     vdom: root
@@ -39,7 +53,7 @@
       dstintf: "{{ destinations_interface }}"
       logtraffic: utm
       nat: enable
-      policyid: "{{ policyid }}"
+      policyid: "{{policyid}}"
       service: "{{ services }}"
       srcaddr: "{{ sources_address }}"
       srcintf: "{{ sources_interface }}"

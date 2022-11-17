@@ -76,6 +76,22 @@
       subnet: "{{item.remote}}"
   with_items: "{{sas}}"
 
+- name: fetch all policies
+  fortinet.fortios.fortios_configuration_fact:
+    sorters: policyid
+    formatters: policyid
+    selector: firewall_policy
+  register: policies
+
+- set_fact:
+    outbound_policy_id="{{policies.meta.results[-1].policyid | int + 1}}"
+    inbound_policy_id="{{policies.meta.results[-1].policyid | int + 2}}"
+  when: policies.meta.results[-1].policyid is defined
+
+- set_fact: outbound_policy_id=1
+    inbound_policy_id=2
+  when: policies.meta.results[-1].policyid is undefined
+
 - name: firewall policy outbound
   tags: firewall_out
   fortios_firewall_policy:
