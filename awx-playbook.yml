@@ -1,5 +1,6 @@
+---
 - name: installation of awx
-  hosts:
+  hosts: ubuntu-vm
 
   tasks:
     - name: Update and upgrade apt packages
@@ -24,10 +25,15 @@
 
     - name: Install python packages
       pip:
-        - name: request
-        - name: docker-compose==1.23.1
-        - name: pyYaml
-          extra_args: --upgrade
+        name:
+          - requests
+          - docker-compose==1.23.1
+        executable: pip3.10
+
+    - name: Install pyYaml package
+      pip:
+        name: pyYaml
+        extra_args: --upgrade
 
     - name: Install npm
       community.general.npm:
@@ -40,8 +46,13 @@
         state: started
         enabled: yes
 
+    # - name: Download docker-compose
+    #   shell: curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
     - name: Download docker-compose
-      shell: curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      uri:
+        url: https://github.com/docker/compose/releases/download/1.23.1/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
 
     - name: Make docker-compose file executable
       file:
@@ -53,13 +64,25 @@
       apt:
         update_cache: yes
 
+    # - name: Get the username
+    #   command: whoami
+    #   register: username
+    
+
+    - name: Download awx from github
+      git:
+        repo: https://github.com/ansible/awx.git
+        dest: /home/ansible-awx/
+        single_branch: yes
+        version: 21.8.0
+
     - name: Build docker-compose with a Makefile
       make:
-        chdir: ./awx/
+        chdir: /home/ansible-awx/
         target: docker-compose-build
 
-    - name: Run docker-compose with a Makefile
-      make:
-        chdir: ./awx/
-        target: docker-compose
-      shell: docker exec tools_awx_1 make clean-ui ui-devel
+    # - name: Run docker-compose with a Makefile
+    #   make:
+    #     chdir: ./awx/
+    #     target: docker-compose
+    #   shell: docker exec tools_awx_1 make clean-ui ui-devel
