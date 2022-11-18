@@ -2,6 +2,9 @@
 - name: installation of awx
   hosts: ubuntu-vm
 
+  vars:
+    who_uses_awx_ui: ass-niang
+
   tasks:
     - name: Update and upgrade apt packages
       become: true
@@ -46,13 +49,13 @@
         state: started
         enabled: yes
 
-    # - name: Download docker-compose
-    #   shell: curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
     - name: Download docker-compose
-      uri:
-        url: https://github.com/docker/compose/releases/download/1.23.1/docker-compose-Linux-x86_64
-        dest: /usr/local/bin/docker-compose
+      shell: curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+    # - name: Download docker-compose
+    #   uri:
+    #     url: https://github.com/docker/compose/releases/download/1.23.1/docker-compose-Linux-x86_64
+    #     dest: /usr/local/bin/docker-compose
 
     - name: Make docker-compose file executable
       file:
@@ -67,7 +70,6 @@
     # - name: Get the username
     #   command: whoami
     #   register: username
-    
 
     - name: Download awx from github
       git:
@@ -81,8 +83,41 @@
         chdir: /home/ansible-awx/
         target: docker-compose-build
 
+    - name: Create the awx_ui_build.sh file
+      file:
+        path: '/home/{{ who_uses_awx_ui }}/Desktop/awx_ui_build.sh'
+        state: touch
+        owner: root
+        mode: 111
+
+    - name: Create the awx_start.sh file
+      file:
+        path: '/home/{{ who_uses_awx_ui }}/Desktop/awx_start.sh'
+        state: touch
+        owner: root
+        mode: 111
+
+    - name: Write in the awx_ui_build.sh file
+      copy:
+        src: 'awx_ui_build.sh'
+        dest: '/home/{{ who_uses_awx_ui }}/Desktop/awx_ui_build.sh'
+        owner: root
+        mode: 111
+
+    - name: Write in the awx_start.sh file
+      copy:
+        src: 'awx_start.sh'
+        dest: '/home/{{ who_uses_awx_ui }}/Desktop/awx_start.sh'
+        owner: root
+        mode: 111
+
     # - name: Run docker-compose with a Makefile
     #   make:
-    #     chdir: ./awx/
+    #     chdir: /home/ansible-awx/
     #     target: docker-compose
-    #   shell: docker exec tools_awx_1 make clean-ui ui-devel
+
+    # - name: Build AWX UI
+    #   community.docker.docker_container_exec:
+    #     container: tools_awx_1
+    #     command: /bin/bash -c "make clean-ui ui-devel"
+    
