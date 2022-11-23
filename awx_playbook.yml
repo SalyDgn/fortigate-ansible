@@ -1,11 +1,17 @@
 ---
-- name: installation of awx
-  hosts: ubuntu-vm
+- name: Installation of awx
+  hosts: "{{ nodes }}"
 
   vars:
-    who_uses_awx_ui: ass-niang
+    who_uses_awx_ui: awx
+    who_uses_awx_ui_passw: awx
 
   tasks:
+    - name: Create the user {{ who_uses_awx_ui }}
+      user:
+        name: '{{ who_uses_awx_ui }}'
+        password: '{{ who_uses_awx_ui_passw }}'
+
     - name: Update and upgrade apt packages
       become: true
       apt:
@@ -99,25 +105,15 @@
 
     - name: Write in the awx_ui_build.sh file
       copy:
-        src: 'awx_ui_build.sh'
+        src: 'awx_scripts/awx_ui_build.sh'
         dest: '/home/{{ who_uses_awx_ui }}/Desktop/awx_ui_build.sh'
         owner: root
         mode: 111
 
     - name: Write in the awx_start.sh file
       copy:
-        src: 'awx_start.sh'
+        src: 'awx_scripts/awx_start.sh'
         dest: '/home/{{ who_uses_awx_ui }}/Desktop/awx_start.sh'
         owner: root
         mode: 111
 
-    # - name: Run docker-compose with a Makefile
-    #   make:
-    #     chdir: /home/ansible-awx/
-    #     target: docker-compose
-
-    # - name: Build AWX UI
-    #   community.docker.docker_container_exec:
-    #     container: tools_awx_1
-    #     command: /bin/bash -c "make clean-ui ui-devel"
-    

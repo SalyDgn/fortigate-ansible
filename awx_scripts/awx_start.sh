@@ -1,5 +1,5 @@
 #!/bin/bash
-gnome-terminal --tab -- sh -c  "rm awx_ui_build.sh && sleep 3"
+sudo rm awx_ui_build.sh && sleep 3
 
 cd /home/ansible-awx/
 
