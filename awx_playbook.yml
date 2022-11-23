@@ -2,8 +2,8 @@
 - name: Installation of awx
   hosts: "{{ nodes }}"
 
-  vars:
-    who_uses_awx_ui:
+  #vars:
+    #who_uses_awx_ui:
     #who_uses_awx_ui_passw:
 
   tasks:
