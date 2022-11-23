@@ -1,0 +1,64 @@
+- name: Get all the policies
+  hosts: fortigate-A
+  collections:
+    - fortinet.fortios
+
+  tasks:
+    - name: fetch all policies
+      fortinet.fortios.fortios_configuration_fact:
+        sorters: policyid
+        formatters: policyid
+        selector: firewall_policy
+      register: policies
+
+
+- name: play 2
+  hosts: fortigate-A
+  collections:
+    - fortinet.fortios
+  vars:
+    years: 0
+    months: 0
+    days: 0
+    hours: 0
+    minutes: 0
+    secondes: 0
+
+  tasks:
+
+    - debug:
+        var: var_test
+
+    - name: fact gathering
+      fortios_monitor_fact:
+        selector: 'firewall_policy'
+        params:
+            policyid: '1'
+      register: policy
+
+    - debug:
+        var: policy
+
+   # - set_fact: first_used="{{ '%Y-%m-%d %H-%M-%S' | strftime(policy.meta.results[0].first_used) }}"
+    
+    - set_fact: last_used="{{policy.meta.results[0].last_used | int}}"
+        threshold="{{years * 3600*24*365 + months * 3600*24*30 + days * 3600*24 + hours * 3600 + minutes * 60 + secondes}}"
+      when: policy.meta.results[0].last_used is defined
+
+    - debug:
+        var:  threshold
+
+    - debug:
+        var:  ansible_date_time.epoch | int - last_used | int
+
+    - name: Disable a policy
+      fortios_firewall_policy:
+        vdom: root
+        state: present
+        firewall_policy:
+          policyid: 1
+          status: disable
+      when: 
+        - threshold | int > 0
+        - policy.meta.results[0].last_used is undefined or (ansible_date_time.epoch | int - last_used | int)  > (threshold | int)
+    
