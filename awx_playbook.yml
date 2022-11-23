@@ -3,14 +3,17 @@
   hosts: "{{ nodes }}"
 
   vars:
-    who_uses_awx_ui: awx
-    who_uses_awx_ui_passw: awx
+    who_uses_awx_ui:
+    #who_uses_awx_ui_passw:
 
   tasks:
-    - name: Create the user {{ who_uses_awx_ui }}
-      user:
-        name: '{{ who_uses_awx_ui }}'
-        password: '{{ who_uses_awx_ui_passw }}'
+    # - name: Create the user {{ who_uses_awx_ui }}
+    #   user:
+    #     state: absent
+    #     name: '{{ who_uses_awx_ui }}'
+    #     password:  "{{ who_uses_awx_ui_passw | password_hash('sha512') }}"
+    #     shell: /bin/bash
+    #     groups: sudo
 
     - name: Update and upgrade apt packages
       become: true
