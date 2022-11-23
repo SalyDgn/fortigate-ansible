@@ -92,13 +92,26 @@
     inbound_policy_id=2
   when: policies.meta.results[-1].policyid is undefined
 
+- name: filter the policy name
+  fortinet.fortios.fortios_configuration_fact:
+    vdom: "root"
+    filters:
+      - name=="outbound-{{site_local_name}}-to-{{site_remote_name}}"
+    selector: "firewall_policy"
+  register: policy
+
+- name: Fail
+  ansible.builtin.fail:
+    msg: Outbound policy name already exists.
+  when: policy.meta.results[0] is defined
+
 - name: firewall policy outbound
   tags: firewall_out
   fortios_firewall_policy:
     vdom: "{{ vdom }}"
     state: "present"
     firewall_policy:
-      name: outbound policy
+      name: outbound-{{site_local_name}}-to-{{site_remote_name}}
       policyid: "{{ outbound_policy_id }}"
       srcintf:
         - name: "port2"
@@ -115,13 +128,26 @@
         - name: "SSH"
   with_items: "{{sas}}"
 
+- name: filter the policy name
+  fortinet.fortios.fortios_configuration_fact:
+    vdom: "root"
+    filters:
+      - name=="inbound-{{site_remote_name}}-to-{{site_local_name}}"
+    selector: "firewall_policy"
+  register: policy
+
+- name: Fail
+  ansible.builtin.fail:
+    msg: Inbound policy name already exists.
+  when: policy.meta.results[0] is defined
+
 - name: firewall policy inbound
   tags: firewall_in
   fortios_firewall_policy:
     vdom: "{{ vdom }}"
     state: "present"
     firewall_policy:
-      name: inbound policy
+      name: inbound-{{site_remote_name}}-to-{{site_local_name}}
       policyid: "{{inbound_policy_id}}"
       srcintf:
         - name: "P1vpn-to-{{site_remote_name}}"
