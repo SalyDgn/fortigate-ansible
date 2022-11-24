@@ -1,25 +1,37 @@
-    fortinet:
-        hosts:
-            fortigate-A:
-                ansible_host: 192.168.32.134
-                ansible_user: "admin"
-                ansible_password: "04062001"
-                vdom: "root"
-                ansible_connection: httpapi
-                ansible_httpapi_port: 4433
-                ansible_httpapi_use_ssl: true
-                ansible_httpapi_validate_certs: false
-                ansible_network_os: fortios
-                ssl_verify: "False"
+fortinet:
+    hosts:
+        fortigate-A:
+            ansible_host: 192.168.32.134
+            ansible_user: "admin"
+            ansible_password: !vault |
+                $ANSIBLE_VAULT;1.1;AES256
+                33633839396362626261666435373031633239376138376463616439643238316561306437663566
+                3334613534386162613231343965353363316138353339310a323833643535323838663336393063
+                63303864653065316362353431376434363763353232623936303135646536633362363364386130
+                3863643838363063340a393863313030313061653732303565383531393366623238623264663434
+                6534
+            vdom: "root"
+            ansible_connection: httpapi
+            ansible_httpapi_port: 4433
+            ansible_httpapi_use_ssl: true
+            ansible_httpapi_validate_certs: false
+            ansible_network_os: fortios
+            ssl_verify: "False"
 
-            fortigate-B:
-                ansible_host: 192.168.32.133
-                ansible_user: "admin"
-                ansible_password: "04062001"
-                vdom: "root"
-                ansible_connection: httpapi
-                ansible_httpapi_port: 4433
-                ansible_httpapi_use_ssl: true
-                ansible_httpapi_validate_certs: false
-                ansible_network_os: fortios
-                ssl_verify: "False"
+        fortigate-B:
+            ansible_host: 192.168.32.133
+            ansible_user: "admin"
+            ansible_password: !vault |
+                $ANSIBLE_VAULT;1.1;AES256
+                33633839396362626261666435373031633239376138376463616439643238316561306437663566
+                3334613534386162613231343965353363316138353339310a323833643535323838663336393063
+                63303864653065316362353431376434363763353232623936303135646536633362363364386130
+                3863643838363063340a393863313030313061653732303565383531393366623238623264663434
+                6534
+            vdom: "root"
+            ansible_connection: httpapi
+            ansible_httpapi_port: 4433
+            ansible_httpapi_use_ssl: true
+            ansible_httpapi_validate_certs: false
+            ansible_network_os: fortios
+            ssl_verify: "False"

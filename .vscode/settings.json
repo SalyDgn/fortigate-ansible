@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/ansible/schemas/main/f/ansible-inventory.json": "file:///root/fortigate-ansible/fortigate_inventory.yml"
+  }
+}
