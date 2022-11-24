@@ -1,7 +1,7 @@
 ---
 # tasks file for delete-policy
 
-- name: filter the policy id
+- name: filter the policy name
   fortinet.fortios.fortios_configuration_fact:
     vdom: "root"
     filters:
