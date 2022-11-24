@@ -42,6 +42,19 @@
 - set_fact: policyid=1
   when: policies.meta.results[-1].policyid is undefined
 
+- name: filter the policy name
+  fortinet.fortios.fortios_configuration_fact:
+    vdom: "root"
+    filters:
+      - name=="{{policy_name}}"
+    selector: "firewall_policy"
+  register: policy
+
+- name: Fail
+  ansible.builtin.fail:
+    msg: Policy name already exists.
+  when: policy.meta.results[0] is defined
+
 - name: "{{ policy_name }}"
   fortios_firewall_policy:
     vdom: root
