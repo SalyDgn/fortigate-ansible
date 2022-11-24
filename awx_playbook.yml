@@ -47,10 +47,10 @@
         name: pyYaml
         extra_args: --upgrade
 
-    - name: Install npm
-      community.general.npm:
-        name: npm
-        global: true
+    # - name: Install npm
+    #   community.general.npm:
+    #     name: npm
+    #     global: true
 
     - name: Start and enable service docker
       service:

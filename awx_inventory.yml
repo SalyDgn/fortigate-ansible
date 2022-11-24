@@ -10,5 +10,5 @@ vms:
             ansible_host: 192.168.176.142
             ansible_user: "root"
             ansible_connection: ssh
-            ansible_ssh_pass: ass
+            ansible_ssh_pass: "assniang"
         
