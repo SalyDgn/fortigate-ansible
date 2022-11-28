@@ -2,8 +2,6 @@ fortinet:
     hosts:
         fortigate-A:
             ansible_host: 192.168.32.134
-            ansible_user: "admin"
-            ansible_password: "04062001"
             vdom: "root"
             ansible_connection: httpapi
             ansible_httpapi_port: 4433
@@ -14,8 +12,6 @@ fortinet:
 
         fortigate-B:
             ansible_host: 192.168.32.133
-            # ansible_user: "admin"
-            #ansible_password: "04062001"
             vdom: "root"
             ansible_connection: httpapi
             ansible_httpapi_port: 4433

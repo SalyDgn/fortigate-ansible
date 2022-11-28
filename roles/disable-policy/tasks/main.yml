@@ -1,9 +1,39 @@
-- name: fact gathering
+- name: Get the statistics of the policies
   fortinet.fortios.fortios_monitor_fact:
     selector: "firewall_policy"
   register: policy
 
-- name: Disable a policy
+- set_fact: threshold="{{years | int * 3600*24*365 + months | int * 3600*24*30 + days | int * 3600*24 + hours | int * 3600 + minutes | int * 60 + seconds | int}}"
+
+- name: "List of never used policies"
+  set_fact: never_used_policies="{{never_used_policies + [item.policyid]}}"
+  when: item.last_used is undefined
+  loop: "{{policy.meta.results}}"
+
+- name: Get the never used policies
+  fortinet.fortios.fortios_configuration_fact:
+    formatters:
+      - comments
+      - policyid
+    filters:
+      - policyid=="{{item}}"
+    selector: "firewall_policy"
+  register: policies
+  loop: "{{never_used_policies}}"
+
+- name: Disable never used policies since more than "{{years}}" years "{{months}}" months "{{days}}" days "{{hours}}" hours "{{minutes}}" minutes "{{seconds}}" seconds
+  fortios_firewall_policy:
+    vdom: root
+    state: present
+    firewall_policy:
+      policyid: "{{item.meta.results[0].policyid}}"
+      status: disable
+  when:
+    - years | int + months | int + days | int + hours | int + minutes | int + seconds | int > 0
+    - (ansible_date_time.epoch | int - item.meta.results[0].comments | int)  > threshold | int
+  with_items: "{{policies.results}}"
+
+- name: Disable used policies since more than "{{years}}" years "{{months}}" months "{{days}}" days "{{hours}}" hours "{{minutes}}" minutes "{{seconds}}" seconds
   fortios_firewall_policy:
     vdom: root
     state: present
@@ -12,6 +42,7 @@
       status: disable
   when:
     - item.policyid | int > 0
-    - years | int + months | int + days | int + hours | int + minutes | int + secondes | int > 0
-    - item.last_used is undefined or (ansible_date_time.epoch | int - item.last_used | int)  > (years | int * 3600*24*365 + months | int * 3600*24*30 + days | int * 3600*24 + hours | int * 3600 + minutes | int * 60 + secondes | int)
+    - years | int + months | int + days | int + hours | int + minutes | int + seconds | int > 0
+    - item.last_used is defined
+    - (ansible_date_time.epoch | int - item.last_used | int)  > threshold | int
   with_items: "{{policy.meta.results}}"
