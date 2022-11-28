@@ -34,8 +34,6 @@
     site_local_name="{{vpn.site.subnets.site_local}}"
     site_remote_name="{{vpn.site.subnets.site_remote}}"
     sas="{{vpn.site.subnets.sas}}"
-    outbound_policy_id="{{ vpn.site.outbound_policy_id }}"
-    inbound_policy_id="{{vpn.site.inbound_policy_id}}"
     seq_num_route_static="{{vpn.site.seq_num_route_static}}"
   tags: route,vpn_status
 
@@ -126,6 +124,7 @@
       service:
         - name: "PING"
         - name: "SSH"
+      comments: "{{ansible_date_time.epoch}}"
   with_items: "{{sas}}"
 
 - name: filter the policy name
@@ -162,6 +161,7 @@
       service:
         - name: "PING"
         - name: "SSH"
+      comments: "{{ansible_date_time.epoch}}"
   with_items: "{{sas}}"
 
 - name: route through vpn tunnel
