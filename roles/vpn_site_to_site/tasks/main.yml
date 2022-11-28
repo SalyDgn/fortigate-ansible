@@ -34,7 +34,6 @@
     site_local_name="{{vpn.site.subnets.site_local}}"
     site_remote_name="{{vpn.site.subnets.site_remote}}"
     sas="{{vpn.site.subnets.sas}}"
-    seq_num_route_static="{{vpn.site.seq_num_route_static}}"
   tags: route,vpn_status
 
 - name: VPN PHASE2
@@ -163,6 +162,21 @@
         - name: "SSH"
       comments: "{{ansible_date_time.epoch}}"
   with_items: "{{sas}}"
+
+- name: Get the static routes
+  fortinet.fortios.fortios_configuration_fact:
+    sorters: "seq_num"
+    filters: "seq_num"
+    selector: "router_static"
+  register: routers
+
+- name: Get the seq_num
+  set_fact: seq_num_route_static="{{routers.meta.results[-1]['seq-num'] | int + 1}}"
+  when: routers.meta.results[-1] is defined
+
+- name: Get the seq_num
+  set_fact: seq_num_route_static=1
+  when: routers.meta.results[-1] is undefined
 
 - name: route through vpn tunnel
   tags: route

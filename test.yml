@@ -1,28 +1,13 @@
 - name: Configure fortigate
-  hosts: fortigate-A
+  hosts: fortinet
   vars:
     never_used_policies: []
 
   tasks:
-    - name: Get the statistics of the policies
-      fortinet.fortios.fortios_monitor_fact:
-        selector: "firewall_policy"
-      register: policy
-
-    - name: "List of never used policies"
-      set_fact: never_used_policies="{{never_used_policies + [item.policyid]}}"
-      when: item.last_used is undefined
-      loop: "{{policy.meta.results}}"
-
-    - name: Get the never used policies
+    - name: Get the static routes
       fortinet.fortios.fortios_configuration_fact:
-        formatters: comments
-        filters:
-          - policyid=="{{item}}"
-        selector: "firewall_policy"
-      register: policies
-      loop: "{{never_used_policies}}"
+        selector: "router_static"
+      register: router
 
     - debug:
-        msg: "{{item.meta.results[0].comments}}"
-      loop: "{{policies.results}}"
+        msg: "{{router.meta.results[-1]['seq-num']}}"

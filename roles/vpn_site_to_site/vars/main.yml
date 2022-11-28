@@ -14,7 +14,6 @@ vpn_fortigate1:
         - name: sa1
           local: 10.10.50.0 255.255.255.0
           remote: 10.10.40.0 255.255.255.0
-    seq_num_route_static: 1
 
 vpn_fortigate2:
   site:
@@ -32,4 +31,3 @@ vpn_fortigate2:
         - name: sa1
           local: 10.10.40.0 255.255.255.0
           remote: 10.10.50.0 255.255.255.0
-    seq_num_route_static: 1
