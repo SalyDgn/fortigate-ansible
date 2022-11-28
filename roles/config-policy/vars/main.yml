@@ -1,7 +1,6 @@
 ---
 # vars file for config-policy
 policy_name: Acces-Internet
-policyid:
 sources_address:
   - name: all # You can use the address name of an existing address or a created one
 sources_interface:
