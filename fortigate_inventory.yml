@@ -2,26 +2,14 @@ fortinet:
     hosts:
         fortigate-A:
             ansible_host: 192.168.176.137
-            vdom: "root"
-            ansible_connection: httpapi
-            ansible_httpapi_port: 443
-            ansible_httpapi_use_ssl: true
-            ansible_httpapi_validate_certs: false
-            ansible_network_os: fortios
-            ssl_verify: "False"
 
         fortigate-B:
             ansible_host: 192.168.176.139
-            vdom: "root"
-            ansible_connection: httpapi
-            ansible_httpapi_port: 443
-            ansible_httpapi_use_ssl: true
-            ansible_httpapi_validate_certs: false
-            ansible_network_os: fortios
-            ssl_verify: "False"
 
         fortigate-C:
             ansible_host: 192.168.176.140
+        
+        fortigate-[A:C]:
             vdom: "root"
             ansible_connection: httpapi
             ansible_httpapi_port: 443

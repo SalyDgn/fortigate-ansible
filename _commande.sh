@@ -3,7 +3,7 @@
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>> Run config-globales role <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 ansible-playbook \
 -i fortigate_inventory.yml \
--e "nodes=fortigate-A,fortigate-B role_name=config-globales" \
+-e "nodes=fortigate-A,fortigate-B role_name=config-globales ansible_user=admin ansible_password=admin" \
 fortigate-playbook.yml
 
 # interface config command (forti1)
