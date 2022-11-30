@@ -1,0 +1,5 @@
+---
+# vars file for enable-policies
+policies_name:
+  - "Acces-Internet"
+  - "inbound-Remote-to-Local"

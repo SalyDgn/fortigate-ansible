@@ -1,13 +1,35 @@
 - name: Configure fortigate
-  hosts: fortinet
+  hosts: fortigate-A
   vars:
-    never_used_policies: []
+    policies_name:
+      - "Acces-Internet"
+      - "inbound-Remote-to-Local"
 
   tasks:
-    - name: Get the static routes
+    - name: filter the policy name
       fortinet.fortios.fortios_configuration_fact:
-        selector: "router_static"
-      register: router
+        vdom: "root"
+        filters:
+          - status=="disable"
+          - name=="{{item}}"
+        formatters:
+          - name
+          - policyid
+        selector: "firewall_policy"
+      register: policies
+      loop: "{{policies_name}}"
 
-    - debug:
-        msg: "{{router.meta.results[-1]['seq-num']}}"
+    - name: fail
+      ansible.builtin.fail:
+        msg: There is no disabled policy named "{{item.item}}".
+      when: item.meta.matched_count | int == 0
+      loop: "{{policies.results}}"
+
+    - name: Enable the policies
+      fortios_firewall_policy:
+        vdom: root
+        state: present
+        firewall_policy:
+          policyid: "{{item.meta.results[0].policyid}}"
+          status: enable
+      with_items: "{{policies.results}}"

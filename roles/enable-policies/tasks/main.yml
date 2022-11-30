@@ -1,10 +1,10 @@
 ---
-# tasks file for delete-policy
-
+# tasks file for enable-policies
 - name: filter the policy name
   fortinet.fortios.fortios_configuration_fact:
     vdom: "root"
     filters:
+      - status=="disable"
       - name=="{{item}}"
     formatters:
       - name
@@ -19,10 +19,11 @@
   when: item.meta.matched_count | int == 0
   loop: "{{policies.results}}"
 
-- name: "delete policy"
+- name: Enable the policies
   fortios_firewall_policy:
     vdom: root
-    state: absent
+    state: present
     firewall_policy:
       policyid: "{{item.meta.results[0].policyid}}"
+      status: enable
   with_items: "{{policies.results}}"
