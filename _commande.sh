@@ -33,3 +33,11 @@ ansible-playbook \
 -i fortigate_inventory.yml \
 -e "nodes=fortigate-A,fortigate-B role_name=vpn_site_to_site fortigate1=fortigate-A fortigate2=fortigate-B" \
 fortigate-playbook.yml 
+
+
+# install awx
+echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>> Install awx <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+ansible-playbook \
+-i awx_inventory.yml \
+-e "nodes=vm-ubuntu-3 who_uses_awx_ui=ass" \
+awx_playbook.yml 

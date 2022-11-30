@@ -11,4 +11,4 @@ vms:
             ansible_user: "root"
             ansible_connection: ssh
             ansible_ssh_pass: "assniang"
-        
+    

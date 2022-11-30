@@ -2,18 +2,10 @@
 - name: Installation of awx
   hosts: "{{ nodes }}"
 
-  #vars:
-    #who_uses_awx_ui:
-    #who_uses_awx_ui_passw:
+  vars:
+    who_uses_awx_ui:
 
   tasks:
-    # - name: Create the user {{ who_uses_awx_ui }}
-    #   user:
-    #     state: absent
-    #     name: '{{ who_uses_awx_ui }}'
-    #     password:  "{{ who_uses_awx_ui_passw | password_hash('sha512') }}"
-    #     shell: /bin/bash
-    #     groups: sudo
 
     - name: Update and upgrade apt packages
       become: true
@@ -47,11 +39,6 @@
         name: pyYaml
         extra_args: --upgrade
 
-    # - name: Install npm
-    #   community.general.npm:
-    #     name: npm
-    #     global: true
-
     - name: Start and enable service docker
       service:
         name: docker
@@ -60,11 +47,6 @@
 
     - name: Download docker-compose
       shell: curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
-    # - name: Download docker-compose
-    #   uri:
-    #     url: https://github.com/docker/compose/releases/download/1.23.1/docker-compose-Linux-x86_64
-    #     dest: /usr/local/bin/docker-compose
 
     - name: Make docker-compose file executable
       file:
@@ -75,10 +57,6 @@
       become: true
       apt:
         update_cache: yes
-
-    # - name: Get the username
-    #   command: whoami
-    #   register: username
 
     - name: Download awx from github
       git:
@@ -119,4 +97,3 @@
         dest: '/home/{{ who_uses_awx_ui }}/Desktop/awx_start.sh'
         owner: root
         mode: 111
-
