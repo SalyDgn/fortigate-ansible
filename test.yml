@@ -1,0 +1,12 @@
+- name: Configure fortigate
+  hosts: fortigate-B
+
+  tasks:
+    - name: filter the policy name
+      fortinet.fortios.fortios_monitor_fact:
+        selector: "vpn_ipsec"
+      register: policy
+
+    - name: Debug
+      debug:
+        msg: "{{policy.meta.results}}"
