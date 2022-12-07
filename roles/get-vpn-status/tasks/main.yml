@@ -18,26 +18,26 @@
 
 - name: Remove file (delete file)
   file:
-    path: "vpn_status.csv"
+    path: "/home/vpn_status.csv"
     state: absent
 
 - name: Insert the date of access of the vpn status
   lineinfile:
-    path: "vpn_status.csv"
+    path: "/home/vpn_status.csv"
     state: present
     create: true
     line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}"
 
 - name: Hedear of down vpn
   lineinfile:
-    path: "vpn_status.csv"
+    path: "/home/vpn_status.csv"
     state: present
     create: true
     line: "---- down vpn ----"
 
 - name: Write the down vpn in the csv file
   lineinfile:
-    path: "vpn_status.csv"
+    path: "/home/vpn_status.csv"
     state: present
     create: true
     line: "{{item}}"
@@ -45,14 +45,14 @@
 
 - name: Hedear of up vpn
   lineinfile:
-    path: "vpn_status.csv"
+    path: "/home/vpn_status.csv"
     state: present
     create: true
     line: "---- up vpn ----"
 
 - name: Write the up vpn in the csv file
   lineinfile:
-    path: "vpn_status.csv"
+    path: "/home/vpn_status.csv"
     state: present
     create: true
     line: "{{item}}"
