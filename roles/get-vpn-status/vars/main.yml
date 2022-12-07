@@ -1,2 +1,4 @@
 ---
-# vars file for roles/get-vpn-status
+# vars file for get-vpn-status
+down_vpn: []
+up_vpn: []
