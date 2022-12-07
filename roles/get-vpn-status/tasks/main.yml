@@ -1,2 +1,59 @@
 ---
-# tasks file for roles/get-vpn-status
+# tasks file for get-vpn-status
+- name: Get the vpn ipsec
+  fortinet.fortios.fortios_monitor_fact:
+    vdom: "root"
+    selector: "vpn_ipsec"
+  register: vpn
+
+- name: Get vpn with down status
+  set_fact: down_vpn="{{down_vpn + [item.proxyid[0].p2name]}}"
+  when: item.proxyid[0].status=="down"
+  loop: "{{vpn.meta.results}}"
+
+- name: Get vpn with up status
+  set_fact: up_vpn="{{up_vpn + [item.proxyid[0].p2name]}}"
+  when: item.proxyid[0].status=="up"
+  loop: "{{vpn.meta.results}}"
+
+- name: Remove file (delete file)
+  file:
+    path: "vpn_status.csv"
+    state: absent
+
+- name: Insert the date of access of the vpn status
+  lineinfile:
+    path: "vpn_status.csv"
+    state: present
+    create: true
+    line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}"
+
+- name: Hedear of down vpn
+  lineinfile:
+    path: "vpn_status.csv"
+    state: present
+    create: true
+    line: "---- down vpn ----"
+
+- name: Write the down vpn in the csv file
+  lineinfile:
+    path: "vpn_status.csv"
+    state: present
+    create: true
+    line: "{{item}}"
+  loop: "{{down_vpn}}"
+
+- name: Hedear of up vpn
+  lineinfile:
+    path: "vpn_status.csv"
+    state: present
+    create: true
+    line: "---- up vpn ----"
+
+- name: Write the up vpn in the csv file
+  lineinfile:
+    path: "vpn_status.csv"
+    state: present
+    create: true
+    line: "{{item}}"
+  loop: "{{up_vpn}}"
