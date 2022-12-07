@@ -1,35 +1,64 @@
 - name: Configure fortigate
   hosts: fortigate-A
   vars:
-    policies_name:
-      - "Acces-Internet"
-      - "inbound-Remote-to-Local"
+    - down_vpn: []
+    - up_vpn: []
 
   tasks:
-    - name: filter the policy name
-      fortinet.fortios.fortios_configuration_fact:
+    - name: Get the vpn ipsec
+      fortinet.fortios.fortios_monitor_fact:
         vdom: "root"
-        filters:
-          - status=="disable"
-          - name=="{{item}}"
-        formatters:
-          - name
-          - policyid
-        selector: "firewall_policy"
-      register: policies
-      loop: "{{policies_name}}"
+        selector: "vpn_ipsec"
+      register: vpn
 
-    - name: fail
-      ansible.builtin.fail:
-        msg: There is no disabled policy named "{{item.item}}".
-      when: item.meta.matched_count | int == 0
-      loop: "{{policies.results}}"
+    - name: Get vpn with down status
+      set_fact: down_vpn="{{down_vpn + [item.proxyid[0].p2name]}}"
+      when: item.proxyid[0].status=="down"
+      loop: "{{vpn.meta.results}}"
 
-    - name: Enable the policies
-      fortios_firewall_policy:
-        vdom: root
+    - name: Get vpn with up status
+      set_fact: up_vpn="{{up_vpn + [item.proxyid[0].p2name]}}"
+      when: item.proxyid[0].status=="up"
+      loop: "{{vpn.meta.results}}"
+
+    - name: Remove file (delete file)
+      file:
+        path: "vpn_status.csv"
+        state: absent
+
+    - name: Insert the date of access of the vpn status
+      lineinfile:
+        path: "vpn_status.csv"
         state: present
-        firewall_policy:
-          policyid: "{{item.meta.results[0].policyid}}"
-          status: enable
-      with_items: "{{policies.results}}"
+        create: true
+        line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}"
+
+    - name: Hedear of down vpn
+      lineinfile:
+        path: "vpn_status.csv"
+        state: present
+        create: true
+        line: "---- down vpn ----"
+
+    - name: Write the down vpn in the csv file
+      lineinfile:
+        path: "vpn_status.csv"
+        state: present
+        create: true
+        line: "{{item}}"
+      loop: "{{down_vpn}}"
+
+    - name: Hedear of up vpn
+      lineinfile:
+        path: "vpn_status.csv"
+        state: present
+        create: true
+        line: "---- up vpn ----"
+
+    - name: Write the up vpn in the csv file
+      lineinfile:
+        path: "vpn_status.csv"
+        state: present
+        create: true
+        line: "{{item}}"
+      loop: "{{up_vpn}}"

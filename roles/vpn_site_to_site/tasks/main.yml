@@ -37,7 +37,7 @@
   tags: route,vpn_status
 
 - name: VPN PHASE2
-  tags: vpn1
+  tags: vpn
   fortios_vpn_ipsec_phase2_interface:
     vdom: "{{ vdom }}"
     state: "present"
