@@ -21,9 +21,6 @@
       when: item.proxyid[0].status=="up"
       loop: "{{vpn.meta.results}}"
 
-    - debug:
-        var: up_vpn
-
 - name: Create the file
   hosts: localhost
   vars:
