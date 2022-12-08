@@ -1,5 +1,5 @@
 - name: Get the status of VPN
-  hosts: "{{nodes}}"
+  hosts: fortigate-A
   vars:
     - down_vpn: []
     - up_vpn: []
