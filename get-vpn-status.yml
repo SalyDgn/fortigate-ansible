@@ -1,5 +1,5 @@
-- name: Configure fortigate
-  hosts: fortigate-A
+- name: Get the status of VPN
+  hosts: "{{nodes}}"
   vars:
     - down_vpn: []
     - up_vpn: []
@@ -21,44 +21,56 @@
       when: item.proxyid[0].status=="up"
       loop: "{{vpn.meta.results}}"
 
+    - debug:
+        var: up_vpn
+
+- name: Create the file
+  hosts: localhost
+  vars:
+    - up_vpn: '{{hostvars["fortigate-A"]["up_vpn"]}}'
+    - down_vpn: '{{hostvars["fortigate-A"]["down_vpn"]}}'
+
+  tasks:
     - name: Remove file (delete file)
       file:
-        path: "vpn_status.csv"
+        path: "/home/vpn_status.txt"
         state: absent
 
     - name: Insert the date of access of the vpn status
       lineinfile:
-        path: "vpn_status.csv"
+        path: "/home/vpn_status.txt"
         state: present
         create: true
         line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}"
 
     - name: Hedear of down vpn
       lineinfile:
-        path: "vpn_status.csv"
+        path: "/home/vpn_status.txt"
         state: present
         create: true
         line: "---- down vpn ----"
 
-    - name: Write the down vpn in the csv file
+    - name: Write the down vpn in the txt file
       lineinfile:
-        path: "vpn_status.csv"
+        path: "/home/vpn_status.txt"
         state: present
         create: true
         line: "{{item}}"
+      when: hostvars["fortigate-A"]["down_vpn"] is defined
       loop: "{{down_vpn}}"
 
     - name: Hedear of up vpn
       lineinfile:
-        path: "vpn_status.csv"
+        path: "/home/vpn_status.txt"
         state: present
         create: true
         line: "---- up vpn ----"
 
-    - name: Write the up vpn in the csv file
+    - name: Write the up vpn in the txt file
       lineinfile:
-        path: "vpn_status.csv"
+        path: "/home/vpn_status.txt"
         state: present
         create: true
         line: "{{item}}"
+      when: hostvars["fortigate-A"]["up_vpn"] is defined
       loop: "{{up_vpn}}"
