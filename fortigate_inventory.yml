@@ -17,3 +17,10 @@ fortinet:
             ansible_httpapi_validate_certs: false
             ansible_network_os: fortios
             ssl_verify: "False"
+
+
+localhost:
+    ansible_host: 192.168.176.141
+    ansible_user: "root"
+    ansible_connection: ssh
+    ansible_ssh_pass: "ass"
