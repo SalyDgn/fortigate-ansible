@@ -2,6 +2,7 @@ fortinet:
     hosts:
         fortigate-A:
             ansible_host: 192.168.176.137
+            ansible_user: admin
 
         fortigate-B:
             ansible_host: 192.168.176.139
