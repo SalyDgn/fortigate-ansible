@@ -22,7 +22,7 @@
       loop: "{{vpn.meta.results}}"
 
 - name: Create the file
-  hosts: awx-localhost
+  hosts: awx_localhost
   vars:
     - up_vpn: '{{hostvars["fortigate-A"]["up_vpn"]}}'
     - down_vpn: '{{hostvars["fortigate-A"]["down_vpn"]}}'
