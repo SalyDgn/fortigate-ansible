@@ -1,5 +1,5 @@
 - name: Get the status of VPN
-  hosts: fortigate-A
+  hosts: "{{node}}"
   vars:
     - down_vpn: []
     - up_vpn: []
@@ -21,53 +21,56 @@
       when: item.proxyid[0].status=="up"
       loop: "{{vpn.meta.results}}"
 
+
+
 - name: Create the file
   hosts: awx_localhost
   vars:
-    - up_vpn: '{{hostvars["fortigate-A"]["up_vpn"]}}'
-    - down_vpn: '{{hostvars["fortigate-A"]["down_vpn"]}}'
+    - up_vpn: '{{hostvars[node]["up_vpn"]}}'
+    - down_vpn: '{{hostvars[node]["down_vpn"]}}'
+    - awx_ui_user: assniang
 
   tasks:
     - name: Remove file (delete file)
       file:
-        path: "/home/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
         state: absent
 
     - name: Insert the date of access of the vpn status
       lineinfile:
-        path: "/home/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
         state: present
         create: true
-        line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}"
+        line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}\n\n[{{node}}]"
 
     - name: Hedear of down vpn
       lineinfile:
-        path: "/home/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
         state: present
         create: true
-        line: "---- down vpn ----"
+        line: "\n>> DOWN VPN:"
 
     - name: Write the down vpn in the txt file
       lineinfile:
-        path: "/home/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
         state: present
         create: true
-        line: "{{item}}"
-      when: hostvars["fortigate-A"]["down_vpn"] is defined
+        line: "\t- {{item}}"
+      when: hostvars[node]["down_vpn"] is defined
       loop: "{{down_vpn}}"
 
     - name: Hedear of up vpn
       lineinfile:
-        path: "/home/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
         state: present
         create: true
-        line: "---- up vpn ----"
+        line: "\n>> UP VPN:"
 
     - name: Write the up vpn in the txt file
       lineinfile:
-        path: "/home/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
         state: present
         create: true
-        line: "{{item}}"
-      when: hostvars["fortigate-A"]["up_vpn"] is defined
+        line: "\t- {{item}}"
+      when: hostvars[node]["up_vpn"] is defined
       loop: "{{up_vpn}}"
