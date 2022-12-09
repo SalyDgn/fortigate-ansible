@@ -1,7 +1,7 @@
 vms:
   hosts:
     vm-ubuntu-1:
-      ansible_host: 192.168.176.131
+      ansible_host: 192.168.32.139
 
     vm-ubuntu-2:
       ansible_host: 192.168.176.142
@@ -9,4 +9,4 @@ vms:
     vm-ubuntu-[1:2]:
       ansible_user: "root"
       ansible_connection: ssh
-      ansible_ssh_pass:
+      ansible_ssh_pass: "04062001"

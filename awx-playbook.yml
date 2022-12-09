@@ -68,14 +68,14 @@
 
     - name: Create the awx_ui_build.sh file
       file:
-        path: "/home/{{ who_uses_awx_ui }}/Desktop/awx_ui_build.sh"
+        path: "/home/awx_ui_build.sh"
         state: touch
         owner: root
         mode: 111
 
     - name: Create the awx_start.sh file
       file:
-        path: "/home/{{ who_uses_awx_ui }}/Desktop/awx_start.sh"
+        path: "/home/awx_start.sh"
         state: touch
         owner: root
         mode: 111
@@ -83,13 +83,13 @@
     - name: Write in the awx_ui_build.sh file
       copy:
         src: "awx_scripts/awx_ui_build.sh"
-        dest: "/home/{{ who_uses_awx_ui }}/Desktop/awx_ui_build.sh"
+        dest: "/home/awx_ui_build.sh"
         owner: root
         mode: 111
 
     - name: Write in the awx_start.sh file
       copy:
         src: "awx_scripts/awx_start.sh"
-        dest: "/home/{{ who_uses_awx_ui }}/Desktop/awx_start.sh"
+        dest: "/home/awx_start.sh"
         owner: root
         mode: 111

@@ -1,5 +1,5 @@
 - name: Get the status of VPN
-  hosts: "{{node}}"
+  hosts: fortigate-A, localhost
   vars:
     - down_vpn: []
     - up_vpn: []
@@ -10,64 +10,62 @@
         vdom: "root"
         selector: "vpn_ipsec"
       register: vpn
+      delegate_to: fortigate-A
 
     - name: Get vpn with down status
-      set_fact: down_vpn="{{down_vpn + [item.name]}}"
+      set_fact: down_vpn="{{down_vpn + [item.proxyid[0].p2name]}}"
       when: item.proxyid[0].status=="down"
       loop: "{{vpn.meta.results}}"
 
     - name: Get vpn with up status
-      set_fact: up_vpn="{{up_vpn + [item.name]}}"
+      set_fact: up_vpn="{{up_vpn + [item.proxyid[0].p2name]}}"
       when: item.proxyid[0].status=="up"
       loop: "{{vpn.meta.results}}"
 
-- name: Create the file
-  hosts: awx_localhost
-  vars:
-    - up_vpn: '{{hostvars[node]["up_vpn"]}}'
-    - down_vpn: '{{hostvars[node]["down_vpn"]}}'
-
-  tasks:
     - name: Remove file (delete file)
       file:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "vpn_status.txt"
         state: absent
+      delegate_to: localhost
 
     - name: Insert the date of access of the vpn status
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "vpn_status.txt"
         state: present
         create: true
-        line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}\n\n[{{node}}]"
+        line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}"
+      delegate_to: localhost
 
     - name: Hedear of down vpn
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "vpn_status.txt"
         state: present
         create: true
-        line: "\n>> DOWN VPN:"
+        line: "---- down vpn ----"
+      delegate_to: localhost
 
     - name: Write the down vpn in the txt file
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "vpn_status.txt"
         state: present
         create: true
-        line: "\t- {{item}}"
-      when: hostvars[node]["down_vpn"] is defined
+        line: "{{item}}"
       loop: "{{down_vpn}}"
+      delegate_to: localhost
 
     - name: Hedear of up vpn
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "vpn_status.txt"
         state: present
         create: true
-        line: "\n>> UP VPN:"
+        line: "---- up vpn ----"
+      delegate_to: localhost
 
     - name: Write the up vpn in the txt file
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/vpn_status.txt"
         state: present
         create: true
-        line: "\t- {{item}}"
-      when: hostvars[node]["up_vpn"] is defined
+        line: "{{item}}"
       loop: "{{up_vpn}}"
+      delegate_to: localhost
