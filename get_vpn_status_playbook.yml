@@ -12,12 +12,12 @@
       register: vpn
 
     - name: Get vpn with down status
-      set_fact: down_vpn="{{down_vpn + [item.proxyid[0].p2name]}}"
+      set_fact: down_vpn="{{down_vpn + [item.name]}}"
       when: item.proxyid[0].status=="down"
       loop: "{{vpn.meta.results}}"
 
     - name: Get vpn with up status
-      set_fact: up_vpn="{{up_vpn + [item.proxyid[0].p2name]}}"
+      set_fact: up_vpn="{{up_vpn + [item.name]}}"
       when: item.proxyid[0].status=="up"
       loop: "{{vpn.meta.results}}"
 
