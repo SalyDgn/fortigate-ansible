@@ -28,7 +28,6 @@
   vars:
     - up_vpn: '{{hostvars[node]["up_vpn"]}}'
     - down_vpn: '{{hostvars[node]["down_vpn"]}}'
-    - awx_ui_user: assniang
 
   tasks:
     - name: Remove file (delete file)
