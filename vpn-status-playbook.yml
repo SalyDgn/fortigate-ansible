@@ -30,26 +30,26 @@
   tasks:
     - name: Remove file (delete file)
       file:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Bureau/vpn_status.txt"
         state: absent
 
     - name: Insert the date of access of the vpn status
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Bureau/vpn_status.txt"
         state: present
         create: true
         line: "File generated at {{ansible_date_time.time}} {{ansible_date_time.date}}\n\n[{{node}}]"
 
     - name: Hedear of down vpn
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Bureau/vpn_status.txt"
         state: present
         create: true
         line: "\n>> DOWN VPN:"
 
     - name: Write the down vpn in the txt file
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Bureau/vpn_status.txt"
         state: present
         create: true
         line: "\t- {{item}}"
@@ -58,14 +58,14 @@
 
     - name: Hedear of up vpn
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Bureau/vpn_status.txt"
         state: present
         create: true
         line: "\n>> UP VPN:"
 
     - name: Write the up vpn in the txt file
       lineinfile:
-        path: "/home/{{awx_ui_user}}/Desktop/vpn_status.txt"
+        path: "/home/{{awx_ui_user}}/Bureau/vpn_status.txt"
         state: present
         create: true
         line: "\t- {{item}}"
