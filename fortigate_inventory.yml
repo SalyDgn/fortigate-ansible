@@ -16,7 +16,7 @@ fortinet:
             ssl_verify: "False"
 
         awx_localhost:
-            ansible_host: 192.168.32.129
+            ansible_host: 192.168.32.139
             ansible_user: "root"
             ansible_connection: ssh
             ansible_ssh_pass: "04062001"
